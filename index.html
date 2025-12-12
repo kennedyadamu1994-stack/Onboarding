@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Onboarding Widget</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .onboarding-widget * {
+            box-sizing: border-box;
+        }
+
+        .onboarding-widget {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            background: transparent;
+            position: relative;
+            color: #1a1a1a;
+        }
+
+        /* Progress Bar */
+        .onboarding-progress {
+            background: #fff;
+            border-radius: 3px;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .onboarding-progress.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #FF006E;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Card Styles */
+        .onboarding-card {
+            background: #fff;
+            border-radius: 3px;
+            padding: 30px;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        /* Welcome Screen */
+        .welcome-content {
+            text-align: center;
+            color: #1a1a1a;
+        }
+
+        .welcome-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .welcome-content p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .button-container {
+            margin-bottom: 20px;
+        }
+
+        .start-button {
+            background: #FF006E;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .start-button:hover {
+            background: #e6005f;
+            transform: translateY(-1px);
+        }
+
+        .privacy-link {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-top: 20px;
+        }
+
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Form Styles */
+        .onboarding-form {
+            display: none;
+            color: #1a1a1a;
+        }
+
+        .form-step {
+            display: none;
+            color: #1a1a1a;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-header {
+            margin-bottom: 25px;
+            color: #1a1a1a;
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: #FF006E;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .question-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+            color: #1a1a1a;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 3px;
+            font-size: 16px;
+            background: #fff;
+            transition: border-color 0.2s ease;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FF006E;
+        }
+
+        .form-input.valid,
+        .form-select.valid {
+            border-color: #00c851;
+        }
+
+        .form-input.error,
+        .form-select.error {
+            border-color: #ff3547;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-error {
+            color: #ff3547;
+            font-size: 14px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        /* Field Label */
+        .field-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Multi-field Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        /* Radio Options */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            color: #1a1a1a;
+        }
+
+        .radio-option:hover {
+            border-color: #FF006E;
+            background: #fff8fc;
+        }
+
+        .radio-option input {
+            margin-right: 12px;
+            accent-color: #FF006E;
+            transform: scale(1.2);
+        }
+
+        .radio-option.selected {
+            border-color: #FF006E;
+            background: #fff8fc;
+        }
+
+        .radio-option span {
+            color: #1a1a1a;
+        }
+
+        /* Activity Selection Grid */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .activity-box {
+            padding: 12px 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            user-select: none;
+        }
+
+        .activity-box:hover {
+            border-color: #FF006E;
+            background: #fff8fc;
+            color: #333;
+        }
+
+        .activity-box.selected {
+            border-color: #FF006E;
+            background: #FF006E;
+            color: white;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            color: #1a1a1a;
+        }
+
+        .checkbox-option:hover {
+            border-color: #FF006E;
+            background: #fff8fc;
+        }
+
+        .checkbox-option input {
+            margin-right: 12px;
+            margin-top: 2px;
+            accent-color: #FF006E;
+            transform: scale(1.2);
+        }
+
+        .checkbox-option.selected {
+            border-color: #FF006E;
+            background: #fff8fc;
+        }
+
+        .checkbox-option span {
+            color: #1a1a1a;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 3px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 52px;
+            flex: 1;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #FF006E;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #e6005f;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8e8e8;
+        }
+
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            color: white;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            color: #1a1a1a;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #00c851;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Hidden Elements */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .onboarding-card {
+                padding: 20px;
+                margin-bottom: 0;
+            }
+            
+            .welcome-content h1 {
+                font-size: 24px;
+            }
+            
+            .question-title {
+                font-size: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .radio-group {
+                gap: 8px;
+            }
+            
+            .radio-option,
+            .checkbox-option {
+                padding: 12px;
+            }
+
+            .activity-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 8px;
+            }
+            
+            .activity-box {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-widget" id="onboardingWidget">
+        <!-- Progress Bar -->
+        <div class="onboarding-progress" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% complete</div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="onboarding-card" id="welcomeScreen">
+            <div class="welcome-content">
+                <h1>Welcome to Our Community</h1>
+                <p>Help us create the perfect sporting experience for you by answering a few quick questions. This should take less than 5 minutes.</p>
+                <div class="button-container">
+                    <button class="start-button" id="startButton">Start Onboarding</button>
+                </div>
+                <a href="https://www.thenbrh.co.uk/utilities-blogs-section/privacy-policy" class="privacy-link">Privacy Policy</a>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <form class="onboarding-form" id="onboardingForm" action="https://script.google.com/macros/s/AKfycbyiT0jWDSGk8f4UD8X9xoPsLHPMAjLjf8cryNkysPGexVrfuhydKentIhbPcc2Xp5_U/exec" method="POST">
+            
+            <!-- Hidden fields for metadata -->
+            <input type="hidden" name="sheetId" value="1b7QxteWsdr7jByJg63f0WvUYz6KIUFYKrQH9ygqeHmg">
+            <input type="hidden" name="sheetName" value="Onboarding List">
+            <input type="hidden" name="submissionId" id="submissionId">
+            <input type="hidden" name="submittedAt" id="submittedAt">
+            <input type="hidden" name="source" value="Community Onboarding v1">
+
+            <!-- Step 1: Name -->
+            <div class="onboarding-card form-step active" data-step="0">
+                <div class="question-header">
+                    <div class="question-number">Question 1 of 10</div>
+                    <h2 class="question-title">What's your name?</h2>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="Name" class="form-input" placeholder="Enter your full name" required>
+                    <div class="form-error">This field is required</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Email -->
+            <div class="onboarding-card form-step" data-step="1">
+                <div class="question-header">
+                    <div class="question-number">Question 2 of 10</div>
+                    <h2 class="question-title">What's your email address?</h2>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="Email" class="form-input" placeholder="your.email@example.com" required>
+                    <div class="form-error">Please enter a valid email address</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Phone -->
+            <div class="onboarding-card form-step" data-step="2">
+                <div class="question-header">
+                    <div class="question-number">Question 3 of 10</div>
+                    <h2 class="question-title">What's your phone number?</h2>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="Phone" class="form-input" placeholder="+44 7XXX XXXXXX">
+                    <div class="form-error"></div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Borough -->
+            <div class="onboarding-card form-step" data-step="3">
+                <div class="question-header">
+                    <div class="question-number">Question 4 of 10</div>
+                    <h2 class="question-title">Which borough do you live in?</h2>
+                </div>
+                <div class="form-group">
+                    <select name="Home Borough" class="form-select" required>
+                        <option value="">Please select...</option>
+                        <option value="Barking and Dagenham">Barking and Dagenham</option>
+                        <option value="Barnet">Barnet</option>
+                        <option value="Bexley">Bexley</option>
+                        <option value="Brent">Brent</option>
+                        <option value="Bromley">Bromley</option>
+                        <option value="Camden">Camden</option>
+                        <option value="Croydon">Croydon</option>
+                        <option value="Ealing">Ealing</option>
+                        <option value="Enfield">Enfield</option>
+                        <option value="Greenwich">Greenwich</option>
+                        <option value="Hackney">Hackney</option>
+                        <option value="Hammersmith and Fulham">Hammersmith and Fulham</option>
+                        <option value="Haringey">Haringey</option>
+                        <option value="Harrow">Harrow</option>
+                        <option value="Havering">Havering</option>
+                        <option value="Hillingdon">Hillingdon</option>
+                        <option value="Hounslow">Hounslow</option>
+                        <option value="Islington">Islington</option>
+                        <option value="Kensington and Chelsea">Kensington and Chelsea</option>
+                        <option value="Kingston upon Thames">Kingston upon Thames</option>
+                        <option value="Lambeth">Lambeth</option>
+                        <option value="Lewisham">Lewisham</option>
+                        <option value="Merton">Merton</option>
+                        <option value="Newham">Newham</option>
+                        <option value="Redbridge">Redbridge</option>
+                        <option value="Richmond upon Thames">Richmond upon Thames</option>
+                        <option value="Southwark">Southwark</option>
+                        <option value="Sutton">Sutton</option>
+                        <option value="Tower Hamlets">Tower Hamlets</option>
+                        <option value="Waltham Forest">Waltham Forest</option>
+                        <option value="Wandsworth">Wandsworth</option>
+                        <option value="Westminster">Westminster</option>
+                    </select>
+                    <div class="form-error">This field is required</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Demographics -->
+            <div class="onboarding-card form-step" data-step="4">
+                <div class="question-header">
+                    <div class="question-number">Question 5 of 10</div>
+                    <h2 class="question-title">Tell us a bit about yourself</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="field-label" for="age">What's your age?</label>
+                        <input type="number" name="Age" id="age" class="form-input" placeholder="25" min="13" max="120" required>
+                        <div class="form-error">This field is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="field-label" for="gender">Gender</label>
+                        <select name="Gender" id="gender" class="form-select" required>
+                            <option value="">Please select...</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-binary">Non-binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                        <div class="form-error">This field is required</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label">Do you have a disability?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="Disability Status" value="Yes" required>
+                            <span>Yes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="Disability Status" value="No" required>
+                            <span>No</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="Disability Status" value="Prefer not to say" required>
+                            <span>Prefer not to say</span>
+                        </label>
+                    </div>
+                    <div class="form-error">This field is required</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Favourite Activity -->
+            <div class="onboarding-card form-step" data-step="5">
+                <div class="question-header">
+                    <div class="question-number">Question 6 of 10</div>
+                    <h2 class="question-title">What's your favourite activity?</h2>
+                </div>
+                <div class="form-group">
+                    <select name="Favourite Activity" class="form-select" required>
+                        <option value="">Please select...</option>
+                        <option value="American Football">American Football</option>
+                        <option value="Athletics">Athletics</option>
+                        <option value="Badminton">Badminton</option>
+                        <option value="Baseball">Baseball</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Boxing">Boxing</option>
+                        <option value="Climbing">Climbing</option>
+                        <option value="Cricket">Cricket</option>
+                        <option value="Cycling">Cycling</option>
+                        <option value="Equestrian">Equestrian</option>
+                        <option value="Esports">Esports</option>
+                        <option value="Football">Football</option>
+                        <option value="Golf">Golf</option>
+                        <option value="Gymnastics">Gymnastics</option>
+                        <option value="Handball">Handball</option>
+                        <option value="Ice Hockey">Ice Hockey</option>
+                        <option value="Lacrosse">Lacrosse</option>
+                        <option value="Mixed Martial Arts (MMA)">Mixed Martial Arts (MMA)</option>
+                        <option value="Other">Other</option>
+                        <option value="Pilates">Pilates</option>
+                        <option value="Rowing">Rowing</option>
+                        <option value="Rugby">Rugby</option>
+                        <option value="Sailing">Sailing</option>
+                        <option value="Skateboarding">Skateboarding</option>
+                        <option value="Spin">Spin</option>
+                        <option value="Squash">Squash</option>
+                        <option value="Surfing">Surfing</option>
+                        <option value="Swimming">Swimming</option>
+                        <option value="Table Tennis">Table Tennis</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Volleyball">Volleyball</option>
+                        <option value="Weightlifting">Weightlifting</option>
+                        <option value="Wrestling">Wrestling</option>
+                        <option value="Yoga">Yoga</option>
+                    </select>
+                    <div class="form-error">This field is required</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 7: Experience Level & Sport Details -->
+            <div class="onboarding-card form-step" data-step="6">
+                <div class="question-header">
+                    <div class="question-number">Question 7 of 10</div>
+                    <h2 class="question-title">Tell us about your experience</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="field-label">How experienced are you in your favourite activity?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="Experience Level" value="Beginner" required>
+                            <span>Beginner</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="Experience Level" value="Intermediate" required>
+                            <span>Intermediate</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="Experience Level" value="Advanced" required>
+                            <span>Advanced</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="Experience Level" value="Expert" required>
+                            <span>Expert</span>
+                        </label>
+                    </div>
+                    <div class="form-error">This field is required</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="field-label" for="yearsPlaying">Years playing this sport</label>
+                        <input type="number" name="Years Playing Sport" id="yearsPlaying" class="form-input" placeholder="5" min="0" max="100" required>
+                        <div class="form-error">This field is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="field-label">Height</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <input type="number" name="Height Feet" class="form-input" placeholder="5" min="3" max="8" required>
+                                <label class="field-label" style="font-size: 12px; margin-top: 4px; margin-bottom: 0;">Feet</label>
+                            </div>
+                            <div>
+                                <input type="number" name="Height Inches" class="form-input" placeholder="9" min="0" max="11" required>
+                                <label class="field-label" style="font-size: 12px; margin-top: 4px; margin-bottom: 0;">Inches</label>
+                            </div>
+                        </div>
+                        <div class="form-error">Both fields are required</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="position">Your position or role in this sport</label>
+                    <input type="text" name="Position in Sport" id="position" class="form-input" placeholder="e.g. Goalkeeper, Forward, Centre, etc." required>
+                    <div class="form-error">This field is required</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 8: Other Interests -->
+            <div class="onboarding-card form-step" data-step="7">
+                <div class="question-header">
+                    <div class="question-number">Question 8 of 10</div>
+                    <h2 class="question-title">What other activities are you interested in?</h2>
+                </div>
+                <div class="form-group">
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Select all activities that interest you (optional)</p>
+                    <div class="activity-grid" id="activityGrid">
+                        <div class="activity-box" data-value="American Football">American Football</div>
+                        <div class="activity-box" data-value="Athletics">Athletics</div>
+                        <div class="activity-box" data-value="Badminton">Badminton</div>
+                        <div class="activity-box" data-value="Baseball">Baseball</div>
+                        <div class="activity-box" data-value="Basketball">Basketball</div>
+                        <div class="activity-box" data-value="Boxing">Boxing</div>
+                        <div class="activity-box" data-value="Climbing">Climbing</div>
+                        <div class="activity-box" data-value="Cricket">Cricket</div>
+                        <div class="activity-box" data-value="Cycling">Cycling</div>
+                        <div class="activity-box" data-value="Equestrian">Equestrian</div>
+                        <div class="activity-box" data-value="Esports">Esports</div>
+                        <div class="activity-box" data-value="Football">Football</div>
+                        <div class="activity-box" data-value="Golf">Golf</div>
+                        <div class="activity-box" data-value="Gymnastics">Gymnastics</div>
+                        <div class="activity-box" data-value="Handball">Handball</div>
+                        <div class="activity-box" data-value="Ice Hockey">Ice Hockey</div>
+                        <div class="activity-box" data-value="Lacrosse">Lacrosse</div>
+                        <div class="activity-box" data-value="Mixed Martial Arts (MMA)">Mixed Martial Arts (MMA)</div>
+                        <div class="activity-box" data-value="Other">Other</div>
+                        <div class="activity-box" data-value="Pilates">Pilates</div>
+                        <div class="activity-box" data-value="Rowing">Rowing</div>
+                        <div class="activity-box" data-value="Rugby">Rugby</div>
+                        <div class="activity-box" data-value="Sailing">Sailing</div>
+                        <div class="activity-box" data-value="Skateboarding">Skateboarding</div>
+                        <div class="activity-box" data-value="Spin">Spin</div>
+                        <div class="activity-box" data-value="Squash">Squash</div>
+                        <div class="activity-box" data-value="Surfing">Surfing</div>
+                        <div class="activity-box" data-value="Swimming">Swimming</div>
+                        <div class="activity-box" data-value="Table Tennis">Table Tennis</div>
+                        <div class="activity-box" data-value="Tennis">Tennis</div>
+                        <div class="activity-box" data-value="Volleyball">Volleyball</div>
+                        <div class="activity-box" data-value="Weightlifting">Weightlifting</div>
+                        <div class="activity-box" data-value="Wrestling">Wrestling</div>
+                        <div class="activity-box" data-value="Yoga">Yoga</div>
+                    </div>
+                    <input type="hidden" name="Other Activities Interested In" id="otherInterestsHidden">
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 9: Clubs -->
+            <div class="onboarding-card form-step" data-step="8">
+                <div class="question-header">
+                    <div class="question-number">Question 9 of 10</div>
+                    <h2 class="question-title">Are there any clubs you're currently involved in?</h2>
+                </div>
+                <div class="form-group">
+                    <textarea name="Participating Clubs" class="form-textarea" placeholder="Tell us about any clubs you participate in, your role, and how often you attend"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 10: Consent -->
+            <div class="onboarding-card form-step" data-step="9">
+                <div class="question-header">
+                    <div class="question-number">Question 10 of 10</div>
+                    <h2 class="question-title">Marketing Consent</h2>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="Marketing Consent" value="I agree to be contacted about sessions and offers, and consent to my data being stored" required>
+                            <span>I agree to be contacted about sessions and offers, and consent to my data being stored</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="whatsappCheckbox" value="Yes">
+                            <span>Yes, add me to the NBRH WhatsApp community for updates and discussions</span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="WhatsApp Consent" id="whatsappConsentHidden" value="No">
+                    <div class="form-error">Please agree to the marketing consent to continue</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                </div>
+            </div>
+
+            <!-- Honeypot -->
+            <input type="text" name="website" class="sr-only" tabindex="-1" autocomplete="off">
+        </form>
+
+        <!-- Success Screen -->
+        <div class="onboarding-card success-screen" id="successScreen">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Thank You!</h2>
+            <p class="success-message">Your responses have been submitted successfully. We'll use this information to personalise your experience.</p>
+            <div id="whatsappLinkContainer" style="display: none; margin-bottom: 20px;">
+                <p style="color: #666; margin-bottom: 15px;">You've opted to join our WhatsApp community!</p>
+                <a href="https://chat.whatsapp.com/IAxLIxJrdmgClEk4WpdT9i?mode=ems_share_c" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Join WhatsApp Group</a>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="location.reload()">Submit Another Response</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 10;
+        let selectedInterests = [];
+        let whatsappOptIn = false;
+
+        function generateSubmissionId() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('submissionId').value = generateSubmissionId();
+            document.getElementById('submittedAt').value = new Date().toISOString();
+            
+            document.getElementById('startButton').addEventListener('click', function() {
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('onboardingForm').style.display = 'block';
+                document.getElementById('progressContainer').classList.add('show');
+                updateProgress();
+            });
+
+            setupFormValidation();
+            setupActivityGrid();
+        });
+
+        function updateProgress() {
+            const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${progress}% complete`;
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep++;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                updateProgress();
+                
+                setTimeout(() => {
+                    const activeStep = document.querySelector('.form-step.active');
+                    const firstInput = activeStep.querySelector('input, select, textarea');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep--;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                updateProgress();
+            }
+        }
+
+        function setupFormValidation() {
+            document.querySelectorAll('.form-input, .form-select').forEach(input => {
+                input.addEventListener('input', function() {
+                    validateStep(this.closest('.form-step'));
+                });
+                input.addEventListener('change', function() {
+                    validateStep(this.closest('.form-step'));
+                });
+            });
+
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const group = this.closest('.radio-group');
+                    group.querySelectorAll('.radio-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    this.closest('.radio-option').classList.add('selected');
+                    validateStep(this.closest('.form-step'));
+                });
+            });
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        this.closest('.checkbox-option').classList.add('selected');
+                    } else {
+                        this.closest('.checkbox-option').classList.remove('selected');
+                    }
+                    
+                    // Track WhatsApp opt-in and update hidden field
+                    if (this.id === 'whatsappCheckbox') {
+                        whatsappOptIn = this.checked;
+                        document.getElementById('whatsappConsentHidden').value = this.checked ? 'Yes' : 'No';
+                    }
+                    
+                    validateStep(this.closest('.form-step'));
+                });
+            });
+        }
+
+        function validateStep(step) {
+            const requiredInputs = step.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+
+            requiredInputs.forEach(input => {
+                if (input.type === 'radio') {
+                    const radioGroup = step.querySelector(`input[name="${input.name}"]:checked`);
+                    if (!radioGroup) {
+                        isValid = false;
+                    }
+                } else if (input.type === 'checkbox') {
+                    if (!input.checked) {
+                        isValid = false;
+                    }
+                } else {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                    }
+                }
+            });
+
+            const continueButton = step.querySelector('.btn-primary');
+            if (continueButton) {
+                continueButton.disabled = !isValid;
+            }
+
+            return isValid;
+        }
+
+        function setupActivityGrid() {
+            const activityGrid = document.getElementById('activityGrid');
+            const hiddenInput = document.getElementById('otherInterestsHidden');
+            
+            if (!activityGrid) return;
+            
+            activityGrid.addEventListener('click', (e) => {
+                const activityBox = e.target.closest('.activity-box');
+                if (activityBox) {
+                    const value = activityBox.dataset.value;
+                    
+                    if (selectedInterests.includes(value)) {
+                        selectedInterests = selectedInterests.filter(v => v !== value);
+                        activityBox.classList.remove('selected');
+                    } else {
+                        selectedInterests.push(value);
+                        activityBox.classList.add('selected');
+                    }
+                    
+                    hiddenInput.value = selectedInterests.join(', ');
+                }
+            });
+        }
+
+        document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            document.getElementById('submittedAt').value = new Date().toISOString();
+            
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.classList.add('loading');
+            submitButton.disabled = true;
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'hiddenSubmit';
+            document.body.appendChild(iframe);
+            
+            this.target = 'hiddenSubmit';
+            this.submit();
+            
+            setTimeout(() => {
+                document.getElementById('onboardingForm').style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('successScreen').style.display = 'block';
+                
+                // Show WhatsApp link if user opted in
+                if (whatsappOptIn) {
+                    document.getElementById('whatsappLinkContainer').style.display = 'block';
+                }
+                
+                document.getElementById('progressFill').style.width = '100%';
+                document.getElementById('progressText').textContent = '100% complete';
+                
+                setTimeout(() => {
+                    if (iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                }, 5000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
