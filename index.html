@@ -422,6 +422,13 @@
             color: #1a1a1a;
         }
 
+        /* Instruction Text */
+        .instruction-text {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
         /* Buttons */
         .button-group {
             display: flex;
@@ -644,7 +651,7 @@
             <!-- Step 1: Name -->
             <div class="onboarding-card form-step active" data-step="0">
                 <div class="question-header">
-                    <div class="question-number">Question 1 of 10</div>
+                    <div class="question-number">Question 1 of 13</div>
                     <h2 class="question-title">What's your name?</h2>
                 </div>
                 <div class="form-group">
@@ -659,7 +666,7 @@
             <!-- Step 2: Email -->
             <div class="onboarding-card form-step" data-step="1">
                 <div class="question-header">
-                    <div class="question-number">Question 2 of 10</div>
+                    <div class="question-number">Question 2 of 13</div>
                     <h2 class="question-title">What's your email address?</h2>
                 </div>
                 <div class="form-group">
@@ -675,7 +682,7 @@
             <!-- Step 3: Phone -->
             <div class="onboarding-card form-step" data-step="2">
                 <div class="question-header">
-                    <div class="question-number">Question 3 of 10</div>
+                    <div class="question-number">Question 3 of 13</div>
                     <h2 class="question-title">What's your phone number?</h2>
                 </div>
                 <div class="form-group">
@@ -691,7 +698,7 @@
             <!-- Step 4: Borough -->
             <div class="onboarding-card form-step" data-step="3">
                 <div class="question-header">
-                    <div class="question-number">Question 4 of 10</div>
+                    <div class="question-number">Question 4 of 13</div>
                     <h2 class="question-title">Which borough do you live in?</h2>
                 </div>
                 <div class="form-group">
@@ -741,7 +748,7 @@
             <!-- Step 5: Demographics -->
             <div class="onboarding-card form-step" data-step="4">
                 <div class="question-header">
-                    <div class="question-number">Question 5 of 10</div>
+                    <div class="question-number">Question 5 of 13</div>
                     <h2 class="question-title">Tell us a bit about yourself</h2>
                 </div>
                 
@@ -792,7 +799,7 @@
             <!-- Step 6: Favourite Activity -->
             <div class="onboarding-card form-step" data-step="5">
                 <div class="question-header">
-                    <div class="question-number">Question 6 of 10</div>
+                    <div class="question-number">Question 6 of 13</div>
                     <h2 class="question-title">What's your favourite activity?</h2>
                 </div>
                 <div class="form-group">
@@ -841,10 +848,10 @@
                 </div>
             </div>
 
-            <!-- Step 7: Experience Level & Sport Details -->
+            <!-- Step 7: Experience Level (Simplified - Removed Height & Position) -->
             <div class="onboarding-card form-step" data-step="6">
                 <div class="question-header">
-                    <div class="question-number">Question 7 of 10</div>
+                    <div class="question-number">Question 7 of 13</div>
                     <h2 class="question-title">Tell us about your experience</h2>
                 </div>
                 
@@ -871,31 +878,9 @@
                     <div class="form-error">This field is required</div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="field-label" for="yearsPlaying">Years playing this sport</label>
-                        <input type="number" name="Years Playing Sport" id="yearsPlaying" class="form-input" placeholder="5" min="0" max="100" required>
-                        <div class="form-error">This field is required</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="field-label">Height</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <div>
-                                <input type="number" name="Height Feet" class="form-input" placeholder="5" min="3" max="8" required>
-                                <label class="field-label" style="font-size: 12px; margin-top: 4px; margin-bottom: 0;">Feet</label>
-                            </div>
-                            <div>
-                                <input type="number" name="Height Inches" class="form-input" placeholder="9" min="0" max="11" required>
-                                <label class="field-label" style="font-size: 12px; margin-top: 4px; margin-bottom: 0;">Inches</label>
-                            </div>
-                        </div>
-                        <div class="form-error">Both fields are required</div>
-                    </div>
-                </div>
-
                 <div class="form-group">
-                    <label class="field-label" for="position">Your position or role in this sport</label>
-                    <input type="text" name="Position in Sport" id="position" class="form-input" placeholder="e.g. Goalkeeper, Forward, Centre, etc." required>
+                    <label class="field-label" for="yearsPlaying">How many years have you been doing this activity?</label>
+                    <input type="number" name="Years Playing Sport" id="yearsPlaying" class="form-input" placeholder="5" min="0" max="100" required>
                     <div class="form-error">This field is required</div>
                 </div>
 
@@ -905,14 +890,143 @@
                 </div>
             </div>
 
-            <!-- Step 8: Other Interests -->
+            <!-- Step 8: Motivations/Goals (NEW) -->
             <div class="onboarding-card form-step" data-step="7">
                 <div class="question-header">
-                    <div class="question-number">Question 8 of 10</div>
+                    <div class="question-number">Question 8 of 13</div>
+                    <h2 class="question-title">What are your main goals for participating?</h2>
+                </div>
+                <div class="form-group">
+                    <p class="instruction-text">Select up to 3 that matter most to you</p>
+                    <div class="checkbox-group" id="motivationsGroup">
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Meet New People">
+                            <span>Meet New People</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Try Something New">
+                            <span>Try Something New</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Stay Fit/Lose Weight">
+                            <span>Stay Fit/Lose Weight</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Learn A New Skill">
+                            <span>Learn A New Skill</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Have Fun">
+                            <span>Have Fun</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Train">
+                            <span>Train</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="motivation-checkbox" value="Compete">
+                            <span>Compete</span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="Motivations" id="motivationsHidden">
+                    <div class="form-error">Please select at least one goal</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 9: Availability/Schedule (NEW) -->
+            <div class="onboarding-card form-step" data-step="8">
+                <div class="question-header">
+                    <div class="question-number">Question 9 of 13</div>
+                    <h2 class="question-title">When are you typically available?</h2>
+                </div>
+                <div class="form-group">
+                    <p class="instruction-text">Select all that apply</p>
+                    <div class="checkbox-group" id="availabilityGroup">
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekday mornings (before 12pm)">
+                            <span>Weekday mornings (before 12pm)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekday afternoons (12pm-5pm)">
+                            <span>Weekday afternoons (12pm-5pm)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekday evenings (after 5pm)">
+                            <span>Weekday evenings (after 5pm)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekend mornings (before 12pm)">
+                            <span>Weekend mornings (before 12pm)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekend afternoons (12pm-5pm)">
+                            <span>Weekend afternoons (12pm-5pm)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="availability-checkbox" value="Weekend evenings (after 5pm)">
+                            <span>Weekend evenings (after 5pm)</span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="Availability" id="availabilityHidden">
+                    <div class="form-error">Please select at least one time slot</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 10: Session Format Preference (NEW) -->
+            <div class="onboarding-card form-step" data-step="9">
+                <div class="question-header">
+                    <div class="question-number">Question 10 of 13</div>
+                    <h2 class="question-title">What type of sessions interest you most?</h2>
+                </div>
+                <div class="form-group">
+                    <p class="instruction-text">Select all that interest you</p>
+                    <div class="checkbox-group" id="sessionFormatGroup">
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="session-format-checkbox" value="Drop In Session">
+                            <span>Drop In Session</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="session-format-checkbox" value="Training Session">
+                            <span>Training Session</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="session-format-checkbox" value="Competitive League">
+                            <span>Competitive League</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="session-format-checkbox" value="Courses/Programmes">
+                            <span>Courses/Programmes</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" class="session-format-checkbox" value="Events/Tournaments">
+                            <span>Events/Tournaments</span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="Session Format Preference" id="sessionFormatHidden">
+                    <div class="form-error">Please select at least one session type</div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 11: Other Interests (Previously Step 8) -->
+            <div class="onboarding-card form-step" data-step="10">
+                <div class="question-header">
+                    <div class="question-number">Question 11 of 13</div>
                     <h2 class="question-title">What other activities are you interested in?</h2>
                 </div>
                 <div class="form-group">
-                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Select all activities that interest you (optional)</p>
+                    <p class="instruction-text">Select all activities that interest you (optional)</p>
                     <div class="activity-grid" id="activityGrid">
                         <div class="activity-box" data-value="American Football">American Football</div>
                         <div class="activity-box" data-value="Athletics">Athletics</div>
@@ -957,10 +1071,10 @@
                 </div>
             </div>
 
-            <!-- Step 9: Clubs -->
-            <div class="onboarding-card form-step" data-step="8">
+            <!-- Step 12: Clubs (Previously Step 9) -->
+            <div class="onboarding-card form-step" data-step="11">
                 <div class="question-header">
-                    <div class="question-number">Question 9 of 10</div>
+                    <div class="question-number">Question 12 of 13</div>
                     <h2 class="question-title">Are there any clubs you're currently involved in?</h2>
                 </div>
                 <div class="form-group">
@@ -972,10 +1086,10 @@
                 </div>
             </div>
 
-            <!-- Step 10: Consent -->
-            <div class="onboarding-card form-step" data-step="9">
+            <!-- Step 13: Consent (Previously Step 10) -->
+            <div class="onboarding-card form-step" data-step="12">
                 <div class="question-header">
-                    <div class="question-number">Question 10 of 10</div>
+                    <div class="question-number">Question 13 of 13</div>
                     <h2 class="question-title">Marketing Consent</h2>
                 </div>
                 <div class="form-group">
@@ -1019,8 +1133,11 @@
 
     <script>
         let currentStep = 0;
-        const totalSteps = 10;
+        const totalSteps = 13;
         let selectedInterests = [];
+        let selectedMotivations = [];
+        let selectedAvailability = [];
+        let selectedSessionFormats = [];
         let whatsappOptIn = false;
 
         function generateSubmissionId() {
@@ -1044,6 +1161,9 @@
 
             setupFormValidation();
             setupActivityGrid();
+            setupMotivationsCheckboxes();
+            setupAvailabilityCheckboxes();
+            setupSessionFormatCheckboxes();
         });
 
         function updateProgress() {
@@ -1137,6 +1257,30 @@
                 }
             });
 
+            // Special validation for multi-select checkbox groups
+            const stepIndex = parseInt(step.getAttribute('data-step'));
+            
+            // Step 7 (data-step="7"): Motivations - at least 1, max 3
+            if (stepIndex === 7) {
+                if (selectedMotivations.length < 1 || selectedMotivations.length > 3) {
+                    isValid = false;
+                }
+            }
+            
+            // Step 8 (data-step="8"): Availability - at least 1
+            if (stepIndex === 8) {
+                if (selectedAvailability.length < 1) {
+                    isValid = false;
+                }
+            }
+            
+            // Step 9 (data-step="9"): Session Format - at least 1
+            if (stepIndex === 9) {
+                if (selectedSessionFormats.length < 1) {
+                    isValid = false;
+                }
+            }
+
             const continueButton = step.querySelector('.btn-primary');
             if (continueButton) {
                 continueButton.disabled = !isValid;
@@ -1166,6 +1310,75 @@
                     
                     hiddenInput.value = selectedInterests.join(', ');
                 }
+            });
+        }
+
+        function setupMotivationsCheckboxes() {
+            const checkboxes = document.querySelectorAll('.motivation-checkbox');
+            const hiddenInput = document.getElementById('motivationsHidden');
+            const step = document.querySelector('[data-step="7"]');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const value = this.value;
+                    
+                    if (this.checked) {
+                        // Limit to 3 selections
+                        if (selectedMotivations.length >= 3) {
+                            this.checked = false;
+                            this.closest('.checkbox-option').classList.remove('selected');
+                            return;
+                        }
+                        selectedMotivations.push(value);
+                    } else {
+                        selectedMotivations = selectedMotivations.filter(v => v !== value);
+                    }
+                    
+                    hiddenInput.value = selectedMotivations.join(', ');
+                    validateStep(step);
+                });
+            });
+        }
+
+        function setupAvailabilityCheckboxes() {
+            const checkboxes = document.querySelectorAll('.availability-checkbox');
+            const hiddenInput = document.getElementById('availabilityHidden');
+            const step = document.querySelector('[data-step="8"]');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const value = this.value;
+                    
+                    if (this.checked) {
+                        selectedAvailability.push(value);
+                    } else {
+                        selectedAvailability = selectedAvailability.filter(v => v !== value);
+                    }
+                    
+                    hiddenInput.value = selectedAvailability.join(', ');
+                    validateStep(step);
+                });
+            });
+        }
+
+        function setupSessionFormatCheckboxes() {
+            const checkboxes = document.querySelectorAll('.session-format-checkbox');
+            const hiddenInput = document.getElementById('sessionFormatHidden');
+            const step = document.querySelector('[data-step="9"]');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const value = this.value;
+                    
+                    if (this.checked) {
+                        selectedSessionFormats.push(value);
+                    } else {
+                        selectedSessionFormats = selectedSessionFormats.filter(v => v !== value);
+                    }
+                    
+                    hiddenInput.value = selectedSessionFormats.join(', ');
+                    validateStep(step);
+                });
             });
         }
 
