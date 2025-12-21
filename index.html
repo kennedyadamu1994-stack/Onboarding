@@ -1318,6 +1318,11 @@
             const hiddenInput = document.getElementById('motivationsHidden');
             const step = document.querySelector('[data-step="7"]');
             
+            if (!checkboxes.length || !hiddenInput) {
+                console.error('Motivation checkboxes or hidden input not found');
+                return;
+            }
+            
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const value = this.value;
@@ -1329,12 +1334,15 @@
                             this.closest('.checkbox-option').classList.remove('selected');
                             return;
                         }
-                        selectedMotivations.push(value);
+                        if (!selectedMotivations.includes(value)) {
+                            selectedMotivations.push(value);
+                        }
                     } else {
                         selectedMotivations = selectedMotivations.filter(v => v !== value);
                     }
                     
                     hiddenInput.value = selectedMotivations.join(', ');
+                    console.log('Motivations updated:', hiddenInput.value);
                     validateStep(step);
                 });
             });
@@ -1345,17 +1353,25 @@
             const hiddenInput = document.getElementById('availabilityHidden');
             const step = document.querySelector('[data-step="8"]');
             
+            if (!checkboxes.length || !hiddenInput) {
+                console.error('Availability checkboxes or hidden input not found');
+                return;
+            }
+            
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const value = this.value;
                     
                     if (this.checked) {
-                        selectedAvailability.push(value);
+                        if (!selectedAvailability.includes(value)) {
+                            selectedAvailability.push(value);
+                        }
                     } else {
                         selectedAvailability = selectedAvailability.filter(v => v !== value);
                     }
                     
                     hiddenInput.value = selectedAvailability.join(', ');
+                    console.log('Availability updated:', hiddenInput.value);
                     validateStep(step);
                 });
             });
@@ -1366,17 +1382,25 @@
             const hiddenInput = document.getElementById('sessionFormatHidden');
             const step = document.querySelector('[data-step="9"]');
             
+            if (!checkboxes.length || !hiddenInput) {
+                console.error('Session format checkboxes or hidden input not found');
+                return;
+            }
+            
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const value = this.value;
                     
                     if (this.checked) {
-                        selectedSessionFormats.push(value);
+                        if (!selectedSessionFormats.includes(value)) {
+                            selectedSessionFormats.push(value);
+                        }
                     } else {
                         selectedSessionFormats = selectedSessionFormats.filter(v => v !== value);
                     }
                     
                     hiddenInput.value = selectedSessionFormats.join(', ');
+                    console.log('Session formats updated:', hiddenInput.value);
                     validateStep(step);
                 });
             });
@@ -1386,6 +1410,12 @@
             e.preventDefault();
             
             document.getElementById('submittedAt').value = new Date().toISOString();
+            
+            // Debug: Log all form data before submission
+            console.log('Form Data Before Submission:');
+            console.log('Motivations:', document.getElementById('motivationsHidden').value);
+            console.log('Availability:', document.getElementById('availabilityHidden').value);
+            console.log('Session Format:', document.getElementById('sessionFormatHidden').value);
             
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.classList.add('loading');
