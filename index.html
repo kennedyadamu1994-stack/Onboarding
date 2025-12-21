@@ -1378,29 +1378,44 @@
         }
 
         function setupSessionFormatCheckboxes() {
+            console.log('=== setupSessionFormatCheckboxes called ===');
             const checkboxes = document.querySelectorAll('.session-format-checkbox');
             const hiddenInput = document.getElementById('sessionFormatHidden');
             const step = document.querySelector('[data-step="9"]');
+            
+            console.log('Found checkboxes:', checkboxes.length);
+            console.log('Found hidden input:', hiddenInput);
+            console.log('Found step:', step);
             
             if (!checkboxes.length || !hiddenInput) {
                 console.error('Session format checkboxes or hidden input not found');
                 return;
             }
             
-            checkboxes.forEach(checkbox => {
+            console.log('Setting up event listeners for', checkboxes.length, 'checkboxes');
+            
+            checkboxes.forEach((checkbox, index) => {
+                console.log(`Setting up checkbox ${index}:`, checkbox.value);
                 checkbox.addEventListener('change', function() {
+                    console.log('=== CHECKBOX CHANGED ===');
+                    console.log('Checkbox value:', this.value);
+                    console.log('Checkbox checked:', this.checked);
+                    
                     const value = this.value;
                     
                     if (this.checked) {
                         if (!selectedSessionFormats.includes(value)) {
                             selectedSessionFormats.push(value);
+                            console.log('Added to selectedSessionFormats:', value);
                         }
                     } else {
                         selectedSessionFormats = selectedSessionFormats.filter(v => v !== value);
+                        console.log('Removed from selectedSessionFormats:', value);
                     }
                     
                     hiddenInput.value = selectedSessionFormats.join(', ');
                     console.log('Session formats updated:', hiddenInput.value);
+                    console.log('selectedSessionFormats array:', selectedSessionFormats);
                     validateStep(step);
                 });
             });
@@ -1412,10 +1427,14 @@
             document.getElementById('submittedAt').value = new Date().toISOString();
             
             // Debug: Log all form data before submission
-            console.log('Form Data Before Submission:');
-            console.log('Motivations:', document.getElementById('motivationsHidden').value);
-            console.log('Availability:', document.getElementById('availabilityHidden').value);
-            console.log('Session Format:', document.getElementById('sessionFormatHidden').value);
+            console.log('=== FORM SUBMISSION ===');
+            console.log('Motivations (hidden input value):', document.getElementById('motivationsHidden').value);
+            console.log('Motivations (array):', selectedMotivations);
+            console.log('Availability (hidden input value):', document.getElementById('availabilityHidden').value);
+            console.log('Availability (array):', selectedAvailability);
+            console.log('Session Format (hidden input value):', document.getElementById('sessionFormatHidden').value);
+            console.log('Session Format (array):', selectedSessionFormats);
+            console.log('======================');
             
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.classList.add('loading');
