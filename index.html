@@ -310,11 +310,14 @@
             min-height: 0;
         }
 
-        .form-row .form-input,
-        .form-row .form-select {
+        .form-row .form-input[type="date"] {
             min-height: 52px;
             max-height: 52px;
             height: 52px;
+        }
+        
+        .form-row .form-select {
+            min-height: 52px;
         }
 
         /* Date Input Specific Fixes */
@@ -668,11 +671,15 @@
                 gap: 12px;
             }
 
-            .form-row .form-input,
-            .form-row .form-select {
+            .form-row .form-input[type="date"] {
                 min-height: 48px !important;
                 max-height: 48px !important;
                 height: 48px !important;
+            }
+            
+            .form-row .form-select {
+                min-height: 48px !important;
+                height: auto !important;
             }
         }
     </style>
