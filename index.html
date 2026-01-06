@@ -315,18 +315,19 @@
             display: block;
             width: 100%;
             min-height: 52px;
-            overflow: hidden;
+            max-height: 52px;
+            height: 52px;
+            overflow: visible;
+            line-height: normal;
         }
 
         /* Better iOS Safari date picker support */
         input[type="date"]::-webkit-date-and-time-value {
             text-align: left;
-            min-height: 24px;
+            line-height: normal;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
-            position: absolute;
-            right: 16px;
             cursor: pointer;
             opacity: 0.7;
         }
@@ -606,8 +607,12 @@
             /* Mobile-specific date input fixes */
             input[type="date"].form-input {
                 min-height: 48px;
+                max-height: 48px;
+                height: 48px;
                 font-size: 16px;
-                padding: 12px 12px 12px 16px;
+                padding: 12px 16px;
+                line-height: normal;
+                overflow: visible;
             }
 
             input[type="date"]::-webkit-calendar-picker-indicator {
