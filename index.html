@@ -307,33 +307,52 @@
 
         .form-row .form-group {
             margin-bottom: 0;
+            min-height: 0;
+        }
+
+        .form-row .form-input,
+        .form-row .form-select {
+            min-height: 52px;
+            max-height: 52px;
+            height: 52px;
         }
 
         /* Date Input Specific Fixes */
         input[type="date"].form-input {
-            position: relative;
-            display: block;
-            width: 100%;
-            min-height: 52px;
-            max-height: 52px;
-            height: 52px;
-            overflow: visible;
-            line-height: normal;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            display: block !important;
+            width: 100% !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            max-height: 52px !important;
+            padding: 14px 16px !important;
+            box-sizing: border-box !important;
+            line-height: 1.4 !important;
+            overflow: hidden !important;
         }
 
         /* Better iOS Safari date picker support */
         input[type="date"]::-webkit-date-and-time-value {
             text-align: left;
-            line-height: normal;
+            line-height: 1.4;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
             opacity: 0.7;
+            width: 20px;
+            height: 20px;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator:hover {
             opacity: 1;
+        }
+
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-clear-button {
+            display: none;
         }
 
         /* Radio Options */
@@ -606,17 +625,19 @@
 
             /* Mobile-specific date input fixes */
             input[type="date"].form-input {
-                min-height: 48px;
-                max-height: 48px;
-                height: 48px;
-                font-size: 16px;
-                padding: 12px 16px;
-                line-height: normal;
-                overflow: visible;
+                height: 48px !important;
+                min-height: 48px !important;
+                max-height: 48px !important;
+                font-size: 16px !important;
+                padding: 12px 16px !important;
+                line-height: 1.4 !important;
+                overflow: hidden !important;
+                box-sizing: border-box !important;
             }
 
             input[type="date"]::-webkit-calendar-picker-indicator {
-                right: 12px;
+                width: 18px;
+                height: 18px;
             }
             
             .button-group {
@@ -645,6 +666,13 @@
             .form-row {
                 grid-template-columns: 1fr;
                 gap: 12px;
+            }
+
+            .form-row .form-input,
+            .form-row .form-select {
+                min-height: 48px !important;
+                max-height: 48px !important;
+                height: 48px !important;
             }
         }
     </style>
