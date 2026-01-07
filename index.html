@@ -1174,7 +1174,7 @@
                 <div class="form-group">
                     <div class="checkbox-group">
                         <label class="checkbox-option">
-                            <input type="checkbox" name="Marketing Consent" value="I agree to be contacted about sessions and offers, and consent to my data being stored" required>
+                            <input type="checkbox" id="marketingCheckbox" value="Yes">
                             <span>I agree to be contacted about sessions and offers, and consent to my data being stored</span>
                         </label>
                         <label class="checkbox-option">
@@ -1182,12 +1182,12 @@
                             <span>Yes, add me to the NBRH WhatsApp community for updates and discussions</span>
                         </label>
                     </div>
+                    <input type="hidden" name="Marketing Consent" id="marketingConsentHidden" value="No">
                     <input type="hidden" name="WhatsApp Consent" id="whatsappConsentHidden" value="No">
-                    <div class="form-error">Please agree to the marketing consent to continue</div>
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
 
@@ -1302,6 +1302,11 @@
                         this.closest('.checkbox-option').classList.add('selected');
                     } else {
                         this.closest('.checkbox-option').classList.remove('selected');
+                    }
+                    
+                    // Track marketing consent and update hidden field
+                    if (this.id === 'marketingCheckbox') {
+                        document.getElementById('marketingConsentHidden').value = this.checked ? 'Yes' : 'No';
                     }
                     
                     // Track WhatsApp opt-in and update hidden field
@@ -1513,6 +1518,8 @@
             console.log('Availability (array):', selectedAvailability);
             console.log('Session Format (hidden input value):', document.getElementById('sessionFormatHidden').value);
             console.log('Session Format (array):', selectedSessionFormats);
+            console.log('Marketing Consent:', document.getElementById('marketingConsentHidden').value);
+            console.log('WhatsApp Consent:', document.getElementById('whatsappConsentHidden').value);
             console.log('======================');
             
             const submitButton = document.querySelector('button[type="submit"]');
