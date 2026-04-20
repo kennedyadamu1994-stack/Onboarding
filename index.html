@@ -1130,7 +1130,7 @@
                         <div class="activity-box" data-value="Mixed Martial Arts (MMA)">Mixed Martial Arts (MMA)</div>
                         <div class="activity-box" data-value="Netball">Netball</div>
                         <div class="activity-box" data-value="Other">Other</div>
-                        <div class="activity-box" data-value="Padel">Other</div>
+                        <div class="activity-box" data-value="Padel">Padel</div>
                         <div class="activity-box" data-value="Pilates">Pilates</div>
                         <div class="activity-box" data-value="Rowing">Rowing</div>
                         <div class="activity-box" data-value="Running">Running</div>
@@ -1183,13 +1183,8 @@
                             <input type="checkbox" id="marketingCheckbox" value="Yes">
                             <span>I agree to be contacted about sessions and offers, and consent to my data being stored</span>
                         </label>
-                        <label class="checkbox-option">
-                            <input type="checkbox" id="whatsappCheckbox" value="Yes">
-                            <span>Yes, add me to the NBRH WhatsApp community for updates and discussions</span>
-                        </label>
                     </div>
                     <input type="hidden" name="Marketing Consent" id="marketingConsentHidden" value="No">
-                    <input type="hidden" name="WhatsApp Consent" id="whatsappConsentHidden" value="No">
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -1206,10 +1201,6 @@
             <div class="success-icon">✓</div>
             <h2 class="success-title">Thank You!</h2>
             <p class="success-message">Your responses have been submitted successfully. We'll use this information to personalise your experience.</p>
-            <div id="whatsappLinkContainer" style="display: none; margin-bottom: 20px;">
-                <p style="color: #666; margin-bottom: 15px;">You've opted to join our WhatsApp community!</p>
-                <a href="https://chat.whatsapp.com/IAxLIxJrdmgClEk4WpdT9i?mode=ems_share_c" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Join WhatsApp Group</a>
-            </div>
             <div class="button-group">
                 <button class="btn btn-primary" onclick="location.reload()">Submit Another Response</button>
             </div>
@@ -1223,7 +1214,6 @@
         let selectedMotivations = [];
         let selectedAvailability = [];
         let selectedSessionFormats = [];
-        let whatsappOptIn = false;
 
         function generateSubmissionId() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -1313,12 +1303,6 @@
                     // Track marketing consent and update hidden field
                     if (this.id === 'marketingCheckbox') {
                         document.getElementById('marketingConsentHidden').value = this.checked ? 'Yes' : 'No';
-                    }
-                    
-                    // Track WhatsApp opt-in and update hidden field
-                    if (this.id === 'whatsappCheckbox') {
-                        whatsappOptIn = this.checked;
-                        document.getElementById('whatsappConsentHidden').value = this.checked ? 'Yes' : 'No';
                     }
                     
                     validateStep(this.closest('.form-step'));
@@ -1432,7 +1416,6 @@
                     }
                     
                     hiddenInput.value = selectedMotivations.join(', ');
-                    console.log('Motivations updated:', hiddenInput.value);
                     validateStep(step);
                 });
             });
@@ -1461,51 +1444,34 @@
                     }
                     
                     hiddenInput.value = selectedAvailability.join(', ');
-                    console.log('Availability updated:', hiddenInput.value);
                     validateStep(step);
                 });
             });
         }
 
         function setupSessionFormatCheckboxes() {
-            console.log('=== setupSessionFormatCheckboxes called ===');
             const checkboxes = document.querySelectorAll('.session-format-checkbox');
             const hiddenInput = document.getElementById('sessionFormatHidden');
             const step = document.querySelector('[data-step="9"]');
-            
-            console.log('Found checkboxes:', checkboxes.length);
-            console.log('Found hidden input:', hiddenInput);
-            console.log('Found step:', step);
             
             if (!checkboxes.length || !hiddenInput) {
                 console.error('Session format checkboxes or hidden input not found');
                 return;
             }
             
-            console.log('Setting up event listeners for', checkboxes.length, 'checkboxes');
-            
             checkboxes.forEach((checkbox, index) => {
-                console.log(`Setting up checkbox ${index}:`, checkbox.value);
                 checkbox.addEventListener('change', function() {
-                    console.log('=== CHECKBOX CHANGED ===');
-                    console.log('Checkbox value:', this.value);
-                    console.log('Checkbox checked:', this.checked);
-                    
                     const value = this.value;
                     
                     if (this.checked) {
                         if (!selectedSessionFormats.includes(value)) {
                             selectedSessionFormats.push(value);
-                            console.log('Added to selectedSessionFormats:', value);
                         }
                     } else {
                         selectedSessionFormats = selectedSessionFormats.filter(v => v !== value);
-                        console.log('Removed from selectedSessionFormats:', value);
                     }
                     
                     hiddenInput.value = selectedSessionFormats.join(', ');
-                    console.log('Session formats updated:', hiddenInput.value);
-                    console.log('selectedSessionFormats array:', selectedSessionFormats);
                     validateStep(step);
                 });
             });
@@ -1515,18 +1481,6 @@
             e.preventDefault();
             
             document.getElementById('submittedAt').value = new Date().toISOString();
-            
-            // Debug: Log all form data before submission
-            console.log('=== FORM SUBMISSION ===');
-            console.log('Motivations (hidden input value):', document.getElementById('motivationsHidden').value);
-            console.log('Motivations (array):', selectedMotivations);
-            console.log('Availability (hidden input value):', document.getElementById('availabilityHidden').value);
-            console.log('Availability (array):', selectedAvailability);
-            console.log('Session Format (hidden input value):', document.getElementById('sessionFormatHidden').value);
-            console.log('Session Format (array):', selectedSessionFormats);
-            console.log('Marketing Consent:', document.getElementById('marketingConsentHidden').value);
-            console.log('WhatsApp Consent:', document.getElementById('whatsappConsentHidden').value);
-            console.log('======================');
             
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.classList.add('loading');
@@ -1544,11 +1498,6 @@
                 document.getElementById('onboardingForm').style.display = 'none';
                 document.getElementById('progressContainer').style.display = 'none';
                 document.getElementById('successScreen').style.display = 'block';
-                
-                // Show WhatsApp link if user opted in
-                if (whatsappOptIn) {
-                    document.getElementById('whatsappLinkContainer').style.display = 'block';
-                }
                 
                 document.getElementById('progressFill').style.width = '100%';
                 document.getElementById('progressText').textContent = '100% complete';
