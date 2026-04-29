@@ -170,11 +170,18 @@
             min-width: 200px;
             display: block;
             margin: 0 auto;
+            font-family: inherit;
         }
 
         .start-button:hover {
             background: #e6005f;
             transform: translateY(-1px);
+        }
+
+        .welcome-meta {
+            font-size: 13px;
+            color: #999;
+            margin-top: 16px;
         }
 
         .privacy-link {
@@ -336,7 +343,6 @@
             overflow: hidden !important;
         }
 
-        /* Better iOS Safari date picker support */
         input[type="date"]::-webkit-date-and-time-value {
             text-align: left;
             line-height: 1.4;
@@ -547,7 +553,7 @@
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* Success Screen */
+        /* Success / Redirect Screen */
         .success-screen {
             display: none;
             text-align: center;
@@ -557,7 +563,7 @@
         .success-icon {
             width: 60px;
             height: 60px;
-            background: #00c851;
+            background: #FF006E;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -578,8 +584,31 @@
         .success-message {
             font-size: 16px;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 8px;
             line-height: 1.6;
+        }
+
+        .redirect-note {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 24px;
+        }
+
+        .redirect-bar-wrap {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .redirect-bar {
+            height: 100%;
+            width: 0%;
+            background: #FF006E;
+            border-radius: 2px;
+            transition: width 3s linear;
         }
 
         /* Hidden Elements */
@@ -626,7 +655,6 @@
                 font-size: 20px;
             }
 
-            /* Mobile-specific date input fixes */
             input[type="date"].form-input {
                 height: 48px !important;
                 min-height: 48px !important;
@@ -695,6 +723,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="onboarding-widget" id="onboardingWidget">
+
         <!-- Progress Bar -->
         <div class="onboarding-progress" id="progressContainer">
             <div class="progress-bar">
@@ -706,12 +735,12 @@
         <!-- Welcome Screen -->
         <div class="onboarding-card" id="welcomeScreen">
             <div class="welcome-content">
-                <h1>Welcome Neighbour!</h1>
-                <p>Help us create the perfect exercise experience for you by answering a few quick questions. This should take less than 3 minutes.</p>
+                <h1>Find sessions made for you</h1>
+                <p>Tell us what you're into and we'll show you sessions, clubs, and activities in your area that actually match — personalised to your borough, schedule, and level.</p>
                 <div class="button-container">
-                    <button class="start-button" id="startButton">Tell Us More About You</button>
+                    <button class="start-button" id="startButton">Show Me My Sessions</button>
                 </div>
-                <a href="https://www.thenbrh.co.uk/utilities-blogs-section/privacy-policy" class="privacy-link"></a>
+                <p class="welcome-meta">Takes less than 3 minutes &nbsp;·&nbsp; <a href="https://www.thenbrh.co.uk/utilities-blogs-section/privacy-policy" class="privacy-link" style="display:inline; font-size:13px;">Privacy Policy</a></p>
             </div>
         </div>
 
@@ -1175,7 +1204,7 @@
             <div class="onboarding-card form-step" data-step="12">
                 <div class="question-header">
                     <div class="question-number">Question 13 of 13</div>
-                    <h2 class="question-title">Marketing Consent</h2>
+                    <h2 class="question-title">Almost there — one last thing</h2>
                 </div>
                 <div class="form-group">
                     <div class="checkbox-group">
@@ -1188,7 +1217,7 @@
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">See My Sessions →</button>
                 </div>
             </div>
 
@@ -1196,20 +1225,22 @@
             <input type="text" name="website" class="sr-only" tabindex="-1" autocomplete="off">
         </form>
 
-        <!-- Success Screen -->
+        <!-- Redirect / Success Screen -->
         <div class="onboarding-card success-screen" id="successScreen">
             <div class="success-icon">✓</div>
-            <h2 class="success-title">Thank You!</h2>
-            <p class="success-message">Your responses have been submitted successfully. We'll use this information to personalise your experience.</p>
-            <div class="button-group">
-                <button class="btn btn-primary" onclick="location.reload()">Submit Another Response</button>
+            <h2 class="success-title">You're all set!</h2>
+            <p class="success-message">We're pulling together sessions matched to you. Taking you to your personal page now...</p>
+            <div class="redirect-bar-wrap">
+                <div class="redirect-bar" id="redirectBar"></div>
             </div>
+            <p class="redirect-note">Not redirecting? <a href="https://www.thenbrh.co.uk/my-nbrh" style="color:#FF006E; text-decoration:none;">Click here</a></p>
         </div>
     </div>
 
     <script>
         let currentStep = 0;
         const totalSteps = 13;
+        const MY_NBRH_URL = 'https://www.thenbrh.co.uk/my-nbrh';
         let selectedInterests = [];
         let selectedMotivations = [];
         let selectedAvailability = [];
@@ -1300,7 +1331,6 @@
                         this.closest('.checkbox-option').classList.remove('selected');
                     }
                     
-                    // Track marketing consent and update hidden field
                     if (this.id === 'marketingCheckbox') {
                         document.getElementById('marketingConsentHidden').value = this.checked ? 'Yes' : 'No';
                     }
@@ -1331,24 +1361,20 @@
                 }
             });
 
-            // Special validation for multi-select checkbox groups
             const stepIndex = parseInt(step.getAttribute('data-step'));
             
-            // Step 7 (data-step="7"): Motivations - at least 1, max 3
             if (stepIndex === 7) {
                 if (selectedMotivations.length < 1 || selectedMotivations.length > 3) {
                     isValid = false;
                 }
             }
             
-            // Step 8 (data-step="8"): Availability - at least 1
             if (stepIndex === 8) {
                 if (selectedAvailability.length < 1) {
                     isValid = false;
                 }
             }
             
-            // Step 9 (data-step="9"): Session Format - at least 1
             if (stepIndex === 9) {
                 if (selectedSessionFormats.length < 1) {
                     isValid = false;
@@ -1392,17 +1418,13 @@
             const hiddenInput = document.getElementById('motivationsHidden');
             const step = document.querySelector('[data-step="7"]');
             
-            if (!checkboxes.length || !hiddenInput) {
-                console.error('Motivation checkboxes or hidden input not found');
-                return;
-            }
+            if (!checkboxes.length || !hiddenInput) return;
             
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const value = this.value;
                     
                     if (this.checked) {
-                        // Limit to 3 selections
                         if (selectedMotivations.length >= 3) {
                             this.checked = false;
                             this.closest('.checkbox-option').classList.remove('selected');
@@ -1426,10 +1448,7 @@
             const hiddenInput = document.getElementById('availabilityHidden');
             const step = document.querySelector('[data-step="8"]');
             
-            if (!checkboxes.length || !hiddenInput) {
-                console.error('Availability checkboxes or hidden input not found');
-                return;
-            }
+            if (!checkboxes.length || !hiddenInput) return;
             
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
@@ -1454,12 +1473,9 @@
             const hiddenInput = document.getElementById('sessionFormatHidden');
             const step = document.querySelector('[data-step="9"]');
             
-            if (!checkboxes.length || !hiddenInput) {
-                console.error('Session format checkboxes or hidden input not found');
-                return;
-            }
+            if (!checkboxes.length || !hiddenInput) return;
             
-            checkboxes.forEach((checkbox, index) => {
+            checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const value = this.value;
                     
@@ -1485,7 +1501,8 @@
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.classList.add('loading');
             submitButton.disabled = true;
-            
+
+            // Submit via hidden iframe so the redirect isn't blocked
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
             iframe.name = 'hiddenSubmit';
@@ -1493,20 +1510,27 @@
             
             this.target = 'hiddenSubmit';
             this.submit();
-            
+
+            // Show redirect screen after brief delay
             setTimeout(() => {
                 document.getElementById('onboardingForm').style.display = 'none';
                 document.getElementById('progressContainer').style.display = 'none';
                 document.getElementById('successScreen').style.display = 'block';
-                
-                document.getElementById('progressFill').style.width = '100%';
-                document.getElementById('progressText').textContent = '100% complete';
-                
+
+                // Trigger the progress bar animation
+                requestAnimationFrame(() => {
+                    document.getElementById('redirectBar').style.width = '100%';
+                });
+
+                // Redirect to My NBRH after 3 seconds
                 setTimeout(() => {
-                    if (iframe.parentNode) {
-                        iframe.parentNode.removeChild(iframe);
-                    }
-                }, 5000);
+                    window.location.href = MY_NBRH_URL;
+                }, 3000);
+
+                // Clean up iframe
+                setTimeout(() => {
+                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                }, 6000);
             }, 500);
         });
     </script>
